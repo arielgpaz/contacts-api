@@ -11,9 +11,7 @@ import com.teste.contactsapi.repositories.ProfissionaisRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import static java.lang.String.format;
@@ -28,7 +26,7 @@ public class ProfissionaisService {
 
     public List<ProfissionalResponse> buscarProfissionaisPorFiltros(String q, List<String> fields) {
 
-        List<Profissional> profissionais = profissionaisRepository.findByDeletedFalseAndNomeContainsIgnoreCaseOrCargoIn(q, Cargo.fromString(q));
+        List<Profissional> profissionais = profissionaisRepository.findByRequestedString(q, Cargo.fromString(q));
 
         if (nonNull(fields) && !fields.isEmpty()) {
             return filtrarCampos(profissionais, fields);
@@ -66,7 +64,7 @@ public class ProfissionaisService {
     }
 
     public Profissional buscarProfissionalPorId(Long id) {
-        return profissionaisRepository.findByIdAndDeletedIs(id, false)
+        return profissionaisRepository.findByIdAndDeletedFalse(id)
                 .orElseThrow(() -> new ProfissionalNaoEncontradoException(
                         format("Profissional com id %d não foi encontrado", id)
                 ));
@@ -75,10 +73,9 @@ public class ProfissionaisService {
     public ProfissionalResponse cadastrarProfissional(ProfissionalRequest profissionalRequest) {
 
         Profissional profissional = Profissional.builder()
-                .nome(profissionalRequest.getNome())
-                .cargo(profissionalRequest.getCargo())
-                .nascimento(profissionalRequest.getNascimento())
-                .createdDate(Date.from(Instant.now()))
+                .nome(profissionalRequest.nome())
+                .cargo(profissionalRequest.cargo())
+                .nascimento(profissionalRequest.nascimento())
                 .build();
 
         Profissional profissionalSalvo = profissionaisRepository.save(profissional);
@@ -90,17 +87,19 @@ public class ProfissionaisService {
 
         Profissional profissional = buscarProfissionalPorId(id);
 
-        profissional.setNome(profissionalRequest.getNome());
-        profissional.setCargo(profissionalRequest.getCargo());
-        profissional.setNascimento(profissionalRequest.getNascimento());
+        profissional.setNome(profissionalRequest.nome());
+        profissional.setCargo(profissionalRequest.cargo());
+        profissional.setNascimento(profissionalRequest.nascimento());
 
         profissionaisRepository.save(profissional);
     }
 
     public void excluirProfissional(Long id) {
 
-        Profissional profissionalParaExcluir = profissionaisRepository.findByIdAndDeletedIs(id, false)
-                .orElseThrow();
+        Profissional profissionalParaExcluir = profissionaisRepository.findByIdAndDeletedFalse(id)
+                .orElseThrow(() -> new ProfissionalNaoEncontradoException(
+                        format("Profissional com id %d não foi encontrado", id)
+                ));
 
         profissionalParaExcluir.setDeleted(true);
 

@@ -12,9 +12,7 @@ import com.teste.contactsapi.repositories.ContatosRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import static java.lang.String.format;
@@ -31,7 +29,7 @@ public class ContatosService {
 
     public List<ContatoResponse> buscarContatosPorFiltros(String q, List<String> fields) {
 
-        List<Contato> contatos = contatosRepository.findByNomeContainsIgnoreCaseOrContatoContainsIgnoreCase(q, q);
+        List<Contato> contatos = contatosRepository.findByRequestedString(q, q);
 
         if (nonNull(fields) && !fields.isEmpty()) {
             return filtrarCampos(contatos, fields);
@@ -78,12 +76,11 @@ public class ContatosService {
 
     public ContatoResponse cadastrarContato(ContatoRequest contatoRequest) {
 
-        Profissional profissional = profissionaisService.buscarProfissionalPorId(contatoRequest.getProfissionalId());
+        Profissional profissional = profissionaisService.buscarProfissionalPorId(contatoRequest.profissionalId());
 
         Contato contato = Contato.builder()
-                .nome(contatoRequest.getNome())
-                .contato(contatoRequest.getContato())
-                .createdDate(Date.from(Instant.now()))
+                .nome(contatoRequest.nome())
+                .contato(contatoRequest.contato())
                 .profissional(profissional)
                 .build();
 
@@ -95,10 +92,10 @@ public class ContatosService {
     public void atualizarContato(Long id, ContatoRequest contatoRequest) {
 
         Contato contato = buscarContatoPorId(id);
-        Profissional profissional = profissionaisService.buscarProfissionalPorId(contatoRequest.getProfissionalId());
+        Profissional profissional = profissionaisService.buscarProfissionalPorId(contatoRequest.profissionalId());
 
-        contato.setNome(contatoRequest.getNome());
-        contato.setContato(contatoRequest.getContato());
+        contato.setNome(contatoRequest.nome());
+        contato.setContato(contatoRequest.contato());
         contato.setProfissional(profissional);
 
         contatosRepository.save(contato);
