@@ -5,6 +5,7 @@ import com.teste.contactsapi.domain.ProfissionalResponse;
 import com.teste.contactsapi.services.ProfissionaisService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -37,7 +38,7 @@ public class ProfissionaisController {
             summary = "Buscar profissionais por id",
             description = "Endpoint para buscar por id")
     public ProfissionalResponse buscarProfissional(
-            @Parameter(description = "Identificador único do profissional")
+            @Parameter(name = "id", in = ParameterIn.PATH, description = "Identificador único do profissional")
             @PathVariable Long id
     ) {
 
@@ -62,7 +63,7 @@ public class ProfissionaisController {
             summary = "Atualizar profissionais",
             description = "Endpoint para atualizar profissionais já cadastrados")
     public void atualizarProfissional(
-            @Parameter(description = "Identificador único do profissional")
+            @Parameter(name = "id", in = ParameterIn.PATH, description = "Identificador único do profissional")
             @PathVariable Long id,
             @Parameter(description = "Novas informações do profissional a ser atualizado")
             @RequestBody ProfissionalRequest profissionalRequest
@@ -76,7 +77,7 @@ public class ProfissionaisController {
             summary = "Excluir profissionais",
             description = "Endpoint para exclusão lógica de profissionais que não serão mais usados")
     public void excluirProfissional(
-            @Parameter(description = "Identificador único do profissional")
+            @Parameter(name = "id", in = ParameterIn.PATH, description = "Identificador único do profissional")
             @PathVariable Long id
     ) {
 

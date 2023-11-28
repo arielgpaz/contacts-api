@@ -5,6 +5,7 @@ import com.teste.contactsapi.domain.ContatoResponse;
 import com.teste.contactsapi.services.ContatosService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -37,7 +38,7 @@ public class ContatosController {
             summary = "Buscar contatos por id",
             description = "Endpoint para buscar por id")
     public ContatoResponse buscarContato(
-            @Parameter(description = "Identificador único do contato")
+            @Parameter(name = "id", in = ParameterIn.PATH, description = "Identificador único do contato")
             @PathVariable Long id
     ) {
 
@@ -62,7 +63,7 @@ public class ContatosController {
             summary = "Atualizar contatos",
             description = "Endpoint para atualizar contatos já cadastrados")
     public void atualizarContato(
-            @Parameter(description = "Identificador único do contato")
+            @Parameter(name = "id", in = ParameterIn.PATH, description = "Identificador único do contato")
             @PathVariable Long id,
             @Parameter(description = "Novas informações do contato a ser atualizado")
             @RequestBody ContatoRequest contatoRequest
@@ -76,7 +77,7 @@ public class ContatosController {
             summary = "Excluir contatos",
             description = "Endpoint para excluir contatos que não serão mais usados")
     public void excluirContato(
-            @Parameter(description = "Identificador único do contato")
+            @Parameter(name = "id", in = ParameterIn.PATH, description = "Identificador único do contato")
             @PathVariable Long id
     ) {
 
