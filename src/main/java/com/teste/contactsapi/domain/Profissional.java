@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.util.Date;
 
@@ -26,6 +27,7 @@ public class Profissional {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date nascimento;
 
+    @CreationTimestamp
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date createdDate;
 
