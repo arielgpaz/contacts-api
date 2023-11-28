@@ -1,0 +1,28 @@
+services:
+
+  postgres:
+    image: 'postgres:latest'
+    container_name: 'contatos_db'
+    volumes:
+      - /database/contatos:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
+    environment:
+      - POSTGRES_USER=contatos
+      - POSTGRES_PASSWORD=contatos
+      - POSTGRES_DB=meus-contatos
+
+  contacts_api:
+    image: 'contacts_api:1.0.0'
+    build:
+      context: .
+    container_name: contacts_api
+    ports:
+      - '8080:8080'
+    depends_on:
+      - postgres
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/meus-contatos
+      - SPRING_DATASOURCE_USERNAME=contatos
+      - SPRING_DATASOURCE_PASSWORD=contatos
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
